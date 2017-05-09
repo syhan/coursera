@@ -48,6 +48,8 @@ object Lists {
         if (l.isEmpty) max else iter(l.tail, if (l.head > max) l.head else max)
       }
 
+      if (xs.isEmpty) throw new java.util.NoSuchElementException
+
       iter(xs, 0)
     }
   }
