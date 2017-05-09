@@ -57,11 +57,11 @@ object VerticalBoxBlur {
    *  columns.
    */
   def parBlur(src: Img, dst: Img, numTasks: Int, radius: Int): Unit = {
-    val splitting = 0 to src.width by src.width / numTasks
+    val splitting = 0 to src.width by (src.width / numTasks max 1)
 
     splitting.zip(splitting.tail).map( t => task {
       blur(src, dst, t._1, t._2, radius)
-    } )
+    } ).foreach(_.join())
   }
 
 }
