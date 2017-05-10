@@ -56,7 +56,8 @@ object HorizontalBoxBlur {
    *  rows.
    */
   def parBlur(src: Img, dst: Img, numTasks: Int, radius: Int): Unit = {
-    val splitting = (0 to src.height by (src.height / numTasks max 1)) :+ src.height
+    val range = 0 to src.height by (src.height / numTasks max 1)
+    val splitting = if (!range.contains(src.height)) range :+ src.height else range
 
     splitting.zip(splitting.tail).map( t => task {
       blur(src, dst, t._1, t._2, radius)
