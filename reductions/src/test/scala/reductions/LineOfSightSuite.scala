@@ -30,5 +30,11 @@ class LineOfSightSuite extends FunSuite {
     assert(output.toList == List(0f, 1f, 4f, 4f))
   }
 
+/*  test("parLineOfSight should invoke the parallel construct 30 times (15 times during upsweep and 15 times during downsweep) for an array of size 17, with threshold 1") {
+    val output = (1 to 17).toArray
+    val input = new Array[Float](17)
+    parLineOfSight(input, output, 1)
+  }*/
+
 }
 

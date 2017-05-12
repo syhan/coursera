@@ -79,35 +79,38 @@ object ParallelParenthesesBalancing {
 
     def traverse(idx: Int, until: Int, arg1: Int, arg2: Int): (Int, Int) = {
       var i = idx
-      var left, right = 0
+      var acc, lack = 0
       while (i < until) {
         val c = chars(i)
         if (c == '(') {
-          left = left + 1
+          acc = acc + 1
         } else if (c == ')') {
-          right = right + 1
+          if (acc >= 0) {
+            acc = acc - 1
+          } else {
+            lack = lack + 1
+          }
         }
 
         i = i + 1
       }
 
-      (left, right)
+      (acc, lack)
     }
 
-    def reduce(from: Int, until: Int) : Int = {
+    def reduce(from: Int, until: Int) : (Int, Int) = {
       if (until - from <= threshold) {
-        val (l, r) = traverse(from, until, 0, 0)
-        l - r
+        traverse(from, until, 0, 0)
       } else {
         val m = (until + from) / 2
-        val (a, b) = parallel(reduce(from, m), reduce(m, until))
-
-        a + b
+        val ((a1, b1), (a2, b2)) = parallel(reduce(from, m), reduce(m, until))
+        val matched = Math.min(a1, b2)
+        (a1 + a2 - matched, b1 + b2 - matched)
       }
 
     }
 
-    reduce(0, chars.length) == 0
+    reduce(0, chars.length) == (0, 0)
   }
 
   // For those who want more:

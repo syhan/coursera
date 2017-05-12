@@ -43,6 +43,16 @@ class ParallelParenthesesBalancingSuite extends FunSuite {
     check(".(", false)
     check("(.", false)
     check(").", false)
+
+
+  }
+
+  test("parallel balance should work for string of any length") {
+    assert(!parBalance(")(".toArray, 1))
+    assert(parBalance("()".toArray, 1))
+    assert(parBalance("((()))".toArray, 1))
+
+
   }
 
 

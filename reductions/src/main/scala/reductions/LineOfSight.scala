@@ -35,14 +35,12 @@ object LineOfSight {
 
   def lineOfSight(input: Array[Float], output: Array[Float]): Unit = {
     var i = 1
-    var m = 0f
+    output(0) = 0f
     while (i < input.length) {
-      m = max(m, input(i) / i)
-      output(i) = m
+      output(i) = max(output(i - 1), input(i) / i)
 
       i = i + 1
     }
-    output(0) = 0
   }
 
   sealed abstract class Tree {
@@ -119,8 +117,10 @@ object LineOfSight {
   def downsweep(input: Array[Float], output: Array[Float], startingAngle: Float,
     tree: Tree): Unit = {
     tree match {
-      case Leaf(from, end, maxPrevious) => downsweepSequential(input, output, maxPrevious, from, end)
-      case Node(left, right) => parallel(downsweep(input, output, startingAngle, left), downsweep(input, output, startingAngle, right))
+      case Leaf(from, end, _) => downsweepSequential(input, output, startingAngle, from, end)
+      case Node(left, right) => parallel(
+        downsweep(input, output, startingAngle, left),
+        downsweep(input, output, max(startingAngle, left.maxPrevious), right))
     }
   }
 
@@ -128,6 +128,6 @@ object LineOfSight {
   def parLineOfSight(input: Array[Float], output: Array[Float],
     threshold: Int): Unit = {
     val tree = upsweep(input, 0, input.length, threshold)
-    downsweep(input, output, 0, tree)
+    downsweep(input, output, 0f, tree)
   }
 }
