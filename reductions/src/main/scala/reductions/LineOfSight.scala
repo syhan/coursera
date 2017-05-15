@@ -56,16 +56,11 @@ object LineOfSight {
   /** Traverses the specified part of the array and returns the maximum angle.
    */
   def upsweepSequential(input: Array[Float], from: Int, until: Int): Float = {
-    val output: Array[Float] = new Array[Float](input.length)
-    lineOfSight(input, output)
-
-    val o = output.slice(from, until)
-
-    var i: Int = 0
+    var i: Int = from
     var m: Float = 0f
 
-    while (i < o.length) {
-      m = max(m, o(i))
+    while (i < until) {
+      m = if(i == 0) 0 else max(m, input(i) / i)
 
       i = i + 1
     }
@@ -102,8 +97,8 @@ object LineOfSight {
     var i = from
     var m: Float = startingAngle
 
-    while (i < until && i < input.length) {
-      m = max(m, input(i) / i)
+    while (i < until) {
+      m = if (i == 0) 0 else max(m, input(i) / i)
       output(i) = m
 
       i = i + 1
@@ -127,7 +122,7 @@ object LineOfSight {
   /** Compute the line-of-sight in parallel. */
   def parLineOfSight(input: Array[Float], output: Array[Float],
     threshold: Int): Unit = {
-    val tree = upsweep(input, 0, input.length, threshold)
+    val tree = upsweep(input, 1, input.length, threshold)
     downsweep(input, output, 0f, tree)
   }
 }
