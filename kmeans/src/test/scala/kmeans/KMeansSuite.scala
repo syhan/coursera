@@ -71,6 +71,14 @@ class KMeansSuite extends FunSuite {
     checkParClassify(points, means, expected)
   }
 
+  test("failed test case") {
+    val points = IndexedSeq(new Point(0, 0, 1), new Point(0, 0, -1), new Point(0, 1, 0), new Point(0, 10, 0))
+    val means = IndexedSeq(new Point(0, -1, 0), new Point(0, 2, 0))
+    val eta = 12.25
+
+    val m = kMeans(points, means, eta)
+    print(m)
+  }
 }
 
 
