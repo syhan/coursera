@@ -1,7 +1,0 @@
-*.zip
-*.pdf
-target/
-.idea/
-
-#ignore thumbnails created by windows
-Thumbs.db
