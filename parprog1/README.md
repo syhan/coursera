@@ -1,3 +1,3 @@
-# coursera-parprog1
+# Parallel Programming
 
-Assignments of Parallel Programming from Coursera
+Assignments and homework for [Parallel Programming](https://www.coursera.org/learn/parprog1)
