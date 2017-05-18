@@ -1,3 +1,3 @@
-# Functional Programming Principles in Scala
-Assignments and homework for Functional Programming Principles in Scala in [Coursera](https://www.coursera.org/learn/progfun1)
+# Big Data Analysis with Scala and Spark
+Assignments and homework for [Big Data Analysis with Scala and Spark](https://www.coursera.org/learn/scala-spark-big-data)
 
