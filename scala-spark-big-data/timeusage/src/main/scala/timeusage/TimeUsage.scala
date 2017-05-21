@@ -174,9 +174,9 @@ object TimeUsage {
     */
   def timeUsageGrouped(summed: DataFrame): DataFrame = {
     summed
-      .groupBy("working", "age", "sex")
+      .groupBy("working", "sex", "age")
       .agg(round(avg("primaryNeeds"), 1).as("primaryNeeds"), round(avg("work"), 1).as("work"), round(avg("other"), 1).as("other"))
-      .orderBy("working", "age", "sex")
+      .orderBy("working", "sex", "age")
   }
 
   /**
@@ -193,13 +193,13 @@ object TimeUsage {
     * @param viewName Name of the SQL view to use
     */
   def timeUsageGroupedSqlQuery(viewName: String): String =
-    s"""SELECT working, age, sex,
+    s"""SELECT working, sex, age,
        |        round(avg(primaryNeeds), 1) as primaryNeeds,
        |        round(avg(work), 1) as work,
        |        round(avg(other), 1) as other
        |  FROM $viewName
-       | GROUP BY working, age, sex
-       | ORDER BY working, age, sex""".stripMargin
+       | GROUP BY working, sex, age
+       | ORDER BY working, sex, age""".stripMargin
 
   /**
     * @return A `Dataset[TimeUsageRow]` from the “untyped” `DataFrame`
@@ -234,10 +234,10 @@ object TimeUsage {
 
     def round(n: Double): Double = (n * 10).round / 10d
 
-    summed.groupByKey(row => (row.working, row.age, row.sex))
+    summed.groupByKey(row => (row.working, row.sex, row.age))
       .agg(typed.avg(_.primaryNeeds), typed.avg(_.work), typed.avg(_.other))
       .map(row => TimeUsageRow(row._1._1, row._1._2, row._1._3, round(row._2), round(row._3), round(row._4)))
-      .orderBy($"working", $"sex", $"age")
+      .orderBy("working", "sex", "age")
   }
 
 }
