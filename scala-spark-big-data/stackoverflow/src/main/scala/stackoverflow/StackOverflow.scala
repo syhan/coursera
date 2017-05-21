@@ -24,7 +24,7 @@ object StackOverflow extends StackOverflow {
     val lines   = sc.textFile("src/main/resources/stackoverflow/stackoverflow.csv")
     val raw     = rawPostings(lines)
     val grouped = groupedPostings(raw)
-    val scored  = scoredPostings(grouped).sample(true, 0.1, 0)
+    val scored  = scoredPostings(grouped)//.sample(true, 0.1, 0)
     val vectors = vectorPostings(scored).persist()
 //    assert(vectors.count() == 2121822, "Incorrect number of vectors: " + vectors.count())
 
