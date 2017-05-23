@@ -20,3 +20,4 @@ project/plugins/project/
 scala-spark-big-data/wikipedia/src/main/resources/wikipedia/wikipedia.dat
 scala-spark-big-data/stackoverflow/src/main/resources/stackoverflow/stackoverflow.csv
 scala-spark-big-data/timeusage/src/main/resources/timeusage/atussum.csv
+scala-capstone/observatory/src/main/resources/*
