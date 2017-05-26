@@ -5,6 +5,7 @@ import java.time.LocalDate
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
+import org.apache.spark.sql.types.StructType
 
 /**
   * 1st milestone: data extraction
@@ -12,6 +13,8 @@ import org.apache.spark.sql._
 object Extraction {
 
   val spark: SparkSession = SparkSession.builder().appName("Observatory").master("local").getOrCreate()
+
+  import spark.implicits._
 
   def read(path: String): RDD[String] = spark.sparkContext.textFile(Paths.get(getClass.getResource(path).toURI).toString)
 
@@ -24,16 +27,16 @@ object Extraction {
     * @return A sequence containing triplets (date, location, temperature)
     */
   def locateTemperatures(year: Int, stationsFile: String, temperaturesFile: String): Iterable[(LocalDate, Location, Double)] = {
-    val station = read(stationsFile)
+    val station = read(stationsFile)//.sample(false, 0.1)
       .map(_.split(","))
       .filter(l => l.size >= 4 && !l(2).isEmpty && !l(3).isEmpty)
-      .map(l => ((l(0), l(1)), Location(l(2).toDouble, l(3).toDouble)))
+      .map(l => ((l(0), l(1)), Location(l(2).toDouble, l(3).toDouble))).cache()
 
-    val temperature = read(temperaturesFile)
+    val temperature = read(temperaturesFile)//.sample(false, 0.01)
       .map(_.split(",")).filter(_.size >= 5)
-      .map(l => ((l(0), l(1)), (LocalDate.of(year, l(2).toInt, l(3).toInt), if (l(4) == "9999.9") 0 else l(4).toDouble)))
+      .map(l => ((l(0), l(1)), (LocalDate.of(year, l(2).toInt, l(3).toInt), if (l(4) == "9999.9") 0 else l(4).toDouble))).cache()
 
-    station.join(temperature).map({case (_, (loc, (date, temp))) => (date, loc, toCelsius(temp))}).persist().collect()
+    station.join(temperature).map({case (_, (loc: Location, (date: LocalDate, temp))) => (date, loc, toCelsius(temp))}).collect()
   }
 
   /**
