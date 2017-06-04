@@ -16,9 +16,9 @@ object Interaction {
     * @return The latitude and longitude of the top-left corner of the tile, as per http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
     */
   def tileLocation(zoom: Int, x: Int, y: Int): Location = {
-    val n = 1 << zoom
-    val lat = toDegrees(atan(sinh(Pi - y / n * 2 * Pi)))
-    val lon = x * 360d / n - 180d
+    val n = pow(2, zoom)
+    val lat = toDegrees(atan(sinh(Pi * (1.0 - y / n * 2.0))))
+    val lon = x * 360.0 / n - 180.0
 
     Location(lat, lon)
   }
@@ -32,7 +32,10 @@ object Interaction {
     * @return A 256×256 image showing the contents of the tile defined by `x`, `y` and `zooms`
     */
   def tile(temperatures: Iterable[(Location, Double)], colors: Iterable[(Double, Color)], zoom: Int, x: Int, y: Int): Image = {
-    val positions = for (j <- y * 256 until (y + 1) * 256; i <- x * 256 until (x + 1) * 256) yield tileLocation(zoom + 8, i, j)
+    val positions = for {
+      j <- y * 256 until (y + 1) * 256
+      i <- x * 256 until (x + 1) * 256
+    } yield tileLocation(zoom + 8, i, j)
 
     val pixels = positions.par
       .map(predictTemperature(temperatures, _))
@@ -53,12 +56,10 @@ object Interaction {
     yearlyData: Iterable[(Int, Data)],
     generateImage: (Int, Int, Int, Int, Data) => Unit
   ): Unit = {
-    (0 to 3).par.foreach(zoom => {
-      for (x <- 0 until pow(2, zoom).toInt; y <- 0 until pow(2, zoom).toInt) {
-        yearlyData.par.foreach {
-          case (year, data) => generateImage(zoom, x, y, year, data)
-        }
-      }
-    })
+      for {
+        zoom <- 0 to 3
+        x <- 0 until pow(2, zoom).toInt
+        y <- 0 until pow(2, zoom).toInt
+      } yearlyData.par.foreach { case (year, data) => generateImage(zoom, x, y, year, data) }
   }
 }
