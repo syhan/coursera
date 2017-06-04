@@ -7,8 +7,6 @@ import observatory.Visualization._
   */
 object Manipulation {
 
-  case class Grid()
-
   /**
     * @param temperatures Known temperatures
     * @return A function that, given a latitude in [-89, 90] and a longitude in [-180, 179],

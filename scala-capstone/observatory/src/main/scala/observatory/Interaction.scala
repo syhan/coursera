@@ -33,9 +33,9 @@ object Interaction {
     */
   def tile(temperatures: Iterable[(Location, Double)], colors: Iterable[(Double, Color)], zoom: Int, x: Int, y: Int): Image = {
     val positions = for {
-      j <- y * 256 until (y + 1) * 256
-      i <- x * 256 until (x + 1) * 256
-    } yield tileLocation(zoom + 8, i, j)
+      j <- 0 until 256
+      i <- 0 until 256
+    } yield tileLocation(zoom + 8, x * 256 + i, y * 256 + j)
 
     val pixels = positions.par
       .map(predictTemperature(temperatures, _))

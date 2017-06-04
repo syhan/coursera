@@ -1,6 +1,9 @@
 package observatory
 
+import scala.math._
 import com.sksamuel.scrimage.{Image, Pixel}
+import observatory.Visualization.interpolateColor
+import observatory.Interaction.tileLocation
 
 /**
   * 5th milestone: value-added information visualization
@@ -25,7 +28,16 @@ object Visualization2 {
     d10: Double,
     d11: Double
   ): Double = {
-    ???
+    d00 * (1.0 - x) * (1.0 - y) + d10 * x * (1.0 - y) + d01 * (1.0 - x) * y + d11 * x * y
+  }
+
+  def predictTemperature(loc: Location, grid: (Int, Int) => Double): Double = {
+    val x0 = ceil(loc.lat).toInt
+    val x1 = floor(loc.lat).toInt
+    val y0 = ceil(loc.lon).toInt
+    val y1 = floor(loc.lon).toInt
+
+    bilinearInterpolation(loc.lat, loc.lon, grid(x0, y0), grid(x0, y1), grid(x1, y0), grid(x1, y1))
   }
 
   /**
@@ -43,7 +55,17 @@ object Visualization2 {
     x: Int,
     y: Int
   ): Image = {
-    ???
+    val locations = for {
+      j <- 0 until 256
+      i <- 0 until 256
+    } yield tileLocation(zoom + 8, x * 256 + i, y * 256 + j)
+
+    val pixels = locations
+      .map(predictTemperature(_, grid))
+      .map(interpolateColor(colors, _))
+      .map(c => Pixel(c.red, c.green, c.blue, 127)).toArray
+
+    Image(256, 256, pixels)
   }
 
 }
