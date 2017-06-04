@@ -55,14 +55,12 @@ object Visualization2 {
     x: Int,
     y: Int
   ): Image = {
-    val locations = for {
+    val c = for {
       j <- 0 until 256
       i <- 0 until 256
-    } yield tileLocation(zoom + 8, x * 256 + i, y * 256 + j)
+    } yield interpolateColor(colors, predictTemperature(tileLocation(zoom + 8, x * 256 + i, y * 256 + j), grid))
 
-    val pixels = locations
-      .map(predictTemperature(_, grid))
-      .map(interpolateColor(colors, _))
+    val pixels = c.par
       .map(c => Pixel(c.red, c.green, c.blue, 127)).toArray
 
     Image(256, 256, pixels)
