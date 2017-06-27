@@ -1,3 +1,3 @@
-# Parallel Programming
+# Functional Programming in Scala Capstone
 
-Assignments and homework for [Parallel Programming](https://www.coursera.org/learn/parprog1)
+Assignments and homework for - [Functional Programming in Scala Capstone](https://www.coursera.org/learn/scala-capstone)

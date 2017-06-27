@@ -4,4 +4,6 @@ Assignments and homework for
 - [Functional Programming Design in Scala](https://www.coursera.org/learn/progfun2)
 - [Parallel Programming](https://www.coursera.org/learn/parprog1)
 - [Big Data Analysis with Scala and Spark](https://www.coursera.org/learn/scala-spark-big-data)
+- [Functional Programming in Scala Capstone](https://www.coursera.org/learn/scala-capstone)
 
+- [Machine Learning](https://www.coursera.org/learn/machine-learning/)
