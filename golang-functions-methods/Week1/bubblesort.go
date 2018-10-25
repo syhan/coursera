@@ -29,9 +29,7 @@ func BubbleSort(sli []int) {
 Swap to exchange two values at position i of given slice
 */
 func Swap(sli []int, i int) {
-	tmp := sli[i]
-	sli[i] = sli[i+1]
-	sli[i+1] = tmp
+	sli[i], sli[i+1] = sli[i+1], sli[i]
 }
 
 func main() {
